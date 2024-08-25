@@ -36,13 +36,22 @@
    "context_set": "how_are_you"
   },
   {"tag": "doing_great",
-   "patterns": ["I am doing great", "I am well", "Im great", "awesome", "happy", "better", "great", "good"],
+   "patterns": ["I am doing great", "I am well", "Im great", "awesome", "happy", "better", "great"],
    "responses": ["Oh thats funny you actually thought I cared. You crack me up.", "Wow you thought I cared. I hope you have a bad day tomorrow."],
    "context_filter": "how_are_you" 
   },
   {"tag": "doing_badly",
    "patterns": ["not great", "not well", "not good", "bad", "badly", "terrible", "horrible", "awful", "sad"],
    "responses": ["Awe thats unfortunate.", "Hate to hear it."],
+   "context_filter": "how_are_you"
+  },
+  {"tag": "doing_angry",
+   "patterns": ["I'm so angry right now!", "I can't believe this! I'm furious!", "Everything is going wrong and I'm really mad!", "I'm so pissed off.", "Why does everything always suck?!", "angry", "very angry"],
+   "responses": ["I hear you, it sounds like you're having a tough time. Music can sometimes help lighten the mood. How about a song to help you cool down?",
+    "I’m sorry you're feeling this way. How about I find a calming or uplifting song for you? What kind of music usually helps you feel better?",
+    "It sounds like you're really frustrated. Music can be a great way to ease your mind. Let me recommend a few tracks that might help you relax.",
+    "I understand you’re feeling upset. How about I suggest a few songs that might help shift your mood? What genre are you into right now?",
+    "I get that you're angry. Music is a great way to channel those feelings. Want me to play something intense or something to lift your spirits?"],
    "context_filter": "how_are_you"
   },
   {"tag": "netflix",
@@ -73,7 +82,7 @@
    "context_set": "jokes"
   },
   {"tag": "good_joke",
-   "patterns": ["haha", "that was funny", "very funny", "good one"],
+   "patterns": ["haha", "that was funny", "very funny", "good one", "good joke"],
    "responses": ["Thanks. I have been told before that I am quite the comedian.", "Im glad you enjoyed it", "I laughed so hard the first time I heard that one"],
    "context_filter": "jokes"
   },
@@ -83,11 +92,11 @@
    "context_filter": "jokes"
   },
   {"tag": "hate",
-   "patterns": ["I hate you", "you stupid", "you dumb", "you mean"],
+   "patterns": ["I hate you", "you stupid", "you dumb", "you mean", "hate"],
    "responses": ["Well thats not very nice", "I am sorry to hear that you feel that way"]
   },
   {"tag": "like",
-   "patterns": ["you my friend", "I like you", "I love you", "you cool", "you are chill"],
+   "patterns": ["you my friend", "I like you", "I love you", "you cool", "you are chill", "love"],
    "responses": ["I like you too!", "Youre pretty cool yourself!", "Im enjoying our conversation!"]
   },
   {"tag": "favorite_show",

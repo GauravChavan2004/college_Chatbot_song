@@ -60,10 +60,17 @@
           $('#BotInput').append(botReply);
         });
       }
-      //when you click the button usertext diplay in BotInput container.
+      //when you click the button usertext go to the backend diplay in container.
       $('#Submit_btn').click(function () {
         getUserResponse();
       });
+      //when you press the Enter key usertext go to the backend and display in container.
+      $("#textInput").keypress(function (e) {
+        key = e.which;
+        if (key == 13) {
+          getUserResponse();
+        }
+    });
     </script>
   </body>
 </html>
