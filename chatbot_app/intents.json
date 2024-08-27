@@ -36,7 +36,7 @@
    "context_set": "how_are_you"
   },
   {"tag": "doing_great",
-   "patterns": ["I am doing great", "I am well", "Im great", "awesome", "happy", "better", "great"],
+   "patterns": ["I am doing great", "I am well", "Im great", "awesome", "happy", "better", "great", "fine"],
    "responses": ["Oh thats funny you actually thought I cared. You crack me up.", "Wow you thought I cared. I hope you have a bad day tomorrow."],
    "context_filter": "how_are_you" 
   },
