@@ -4,7 +4,7 @@
    "responses": ["hello peasant human", "hello lowly human", "how dare you address me like that"]
   },
   {"tag": "goodbye",
-   "patterns": ["bye", "cya", "see you later", "goodbye", "im leaving", "have a good day"],
+   "patterns": ["bye", "cya", "see you later", "goodbye", "im leaving", "have a good day","see you again"],
    "responses": ["i won't miss you", "i didn't like talking to you anyway", "thank god you're leaving"]
   },
   {"tag": "age",
@@ -13,11 +13,11 @@
   },
   {"tag": "thanks",
    "patterns": ["thanks", "thank you", "thankyou", "ty", "i owe you one"],
-   "responses": ["you owe me one", "ok...", "sure..."]
+   "responses": ["you owe me one", "ok...", "sure...","my pleasure..."]
   },
   {"tag": "name",
    "patterns": ["name", "your name", "do you have a name", "what are you called", "what is your name", "what should i call you", "whats your name?",  "what are you", "who are you", "who is this", "what am i chatting to", "who am i taking to", "what are you"],
-   "responses": [ "you can call me melodymaven.", "i'm melodymaven", "i'm melodymaven, i can recommend song for you."],
+   "responses": [ "you can call me melodymaven & i can recommend song for you.", "i'm melodymaven, i can recommend song for you."],
    "context_set": "melodymaven"
   },
   {"tag": "sky_net_yes",
@@ -36,7 +36,7 @@
    "context_set": "how_are_you"
   },
   {"tag": "doing_great",
-   "patterns": ["i am doing great", "i am well", "im great", "awesome", "happy", "better", "great", "fine"],
+   "patterns": ["i am doing great", "i am well", "im great", "awesome", "happy", "better", "fine"],
    "responses": ["oh thats funny you actually thought i cared. you crack me up.", "wow you thought i cared. i hope you have a good day tomorrow."],
    "context_filter": "how_are_you" 
   },
@@ -116,4 +116,3 @@
   "responses": ["well that hurts :("]
   }
 ]}
-
