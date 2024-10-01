@@ -6,7 +6,7 @@
   </head>
   <body>
     <h1>Suggested Songs</h1>
-    <ul>
+    <ol>
       {% for song in songs %}
       <li>
         <a href="{{ song.url }}" target="_blank"
@@ -14,6 +14,6 @@
         >
       </li>
       {% endfor %}
-    </ul>
+    </ol>
   </body>
 </html>

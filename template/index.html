@@ -112,7 +112,7 @@
         <button type="submit" id="Submit_btn">
           <i class="bi bi-send"></i>
         </button>
-        <button><a href="/get_song">Click</a></button>
+        <button><a href="/login">Get Song</a></button>
       </div>
     </div>
 
@@ -145,6 +145,20 @@
           getUserResponse();
         }
       });
+      // Create the list element
+      var list = $("<ol>").appendTo("#BotInput");
+
+      // Loop through the songs array and create list items
+      $.each(songs, function(index, song) {
+          var listItem = $("<li>").appendTo(list);
+          var link = $("<a>")
+              .attr("href", song.url)
+              .attr("target", "_blank")
+              .text(song.name + " by " + song.artist)
+              .appendTo(listItem);
+      });
+
+      
     </script>
   </body>
 </html>

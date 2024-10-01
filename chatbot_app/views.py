@@ -6,17 +6,14 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from .models import Conversation
+from .models import Emotion
 from .intents import intents
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import random
 import text2emotion
 import requests
-
 from django.http import JsonResponse
-
-
-import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
 lemmatizer = WordNetLemmatizer()
@@ -54,9 +51,10 @@ def chat(request):
     msg = request.GET.get('user_message')
     msg1=msg.lower()
     response = chatbot_response(msg1)
-    Conversation.objects.create(user_input=msg, response=response)
+    emotion2 = analyze_emotion(msg)
+    Emotion.objects.create(emotion=emotion2)
+    Conversation.objects.create(user_input=msg, response=response) 
     return HttpResponse(response)
-
 
 
 CLIENT_ID = '5f23245341574c4f8197d92d339cb2e7'
@@ -80,14 +78,12 @@ def callback(request):
     })
     token_info = response.json()
     access_token = token_info['access_token']
-    return redirect(f'/suggest/?access_token={access_token}')
+    return redirect(f'/suggest/?access_token1={access_token}')
 
 def suggest_songs(request):
-    access_token = request.GET.get('access_token')
-    msg = request.GET.get('user_message')
-    emotion = analyze_emotion(msg)  # Default emotion
-    print(emotion)
-    search_url = f'https://api.spotify.com/v1/search?q={emotion}&type=track&limit=10'
+    access_token = request.GET.get('access_token1')
+    emotion2 = Emotion.objects.latest('id').emotion
+    search_url = f'https://api.spotify.com/v1/search?q={emotion2}&type=track&limit=10'
     response = requests.get(search_url, headers={
         'Authorization': f'Bearer {access_token}'
     })
