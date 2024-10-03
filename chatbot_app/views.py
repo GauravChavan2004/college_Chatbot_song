@@ -1,3 +1,4 @@
+
 import nltk
 nltk.download('punkt_tab')
 nltk.download('wordnet')
@@ -13,6 +14,7 @@ from nltk.tokenize import word_tokenize
 import random
 import text2emotion
 import requests
+import json
 from django.http import JsonResponse
 from spotipy.oauth2 import SpotifyOAuth
 
@@ -20,7 +22,7 @@ lemmatizer = WordNetLemmatizer()
 
 
 def home(request):
-    return render(request,"index.html")
+    return render(request,"index.html",{})
 
 def chatbot_response(msg):
     words = word_tokenize(msg)
@@ -41,20 +43,29 @@ emotion_labels = {
     'Surprise': 'surprised'
 }
 
-def analyze_emotion(msg):
+def analyze_emotion(request):
+    msg = request.GET.get('user_message')
+
+    if not msg:  # Check if msg is None or empty
+        return JsonResponse({'error': 'No message provided'}, status=400)
+
     emotions = text2emotion.get_emotion(msg)
+    if not emotions:  # Check if emotions is empty
+        return JsonResponse({'error': 'Emotion analysis failed'}, status=400)
+
     max_emotion = max(emotions, key=emotions.get)
-    return emotion_labels[max_emotion]
+    emotion_label = emotion_labels[max_emotion]
+
+    Emotion.objects.create(emotion=emotion_label)
+    return JsonResponse({'emotion': emotion_label}, status=200)
 
 
 def chat(request):
     msg = request.GET.get('user_message')
     msg1=msg.lower()
     response = chatbot_response(msg1)
-    emotion2 = analyze_emotion(msg)
-    Emotion.objects.create(emotion=emotion2)
     Conversation.objects.create(user_input=msg, response=response) 
-    return HttpResponse(response)
+    return JsonResponse({'response':response})
 
 
 CLIENT_ID = '5f23245341574c4f8197d92d339cb2e7'
@@ -68,6 +79,9 @@ def login(request):
 
 def callback(request):
     code = request.GET.get('code')
+    if not code:
+        return JsonResponse({'error': 'Authorization code not provided'}, status=400)
+
     token_url = 'https://accounts.spotify.com/api/token'
     response = requests.post(token_url, data={
         'grant_type': 'authorization_code',
@@ -76,21 +90,15 @@ def callback(request):
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET
     })
+
+    if response.status_code != 200:
+        return JsonResponse({'error': 'Failed to retrieve access token'}, status=response.status_code)
+
     token_info = response.json()
-    access_token = token_info['access_token']
-    return redirect(f'/suggest/?access_token1={access_token}')
+    access_token = token_info.get('access_token')
+    if not access_token:
+        return JsonResponse({'error': 'Access token not found'}, status=500)
 
-def suggest_songs(request):
-    access_token = request.GET.get('access_token1')
-    emotion2 = Emotion.objects.latest('id').emotion
-    search_url = f'https://api.spotify.com/v1/search?q={emotion2}&type=track&limit=10'
-    response = requests.get(search_url, headers={
-        'Authorization': f'Bearer {access_token}'
-    })
-
-    if response.status_code == 200:
-        songs = response.json().get('tracks', {}).get('items', [])
-        song_list = [{'name': song['name'], 'artist': song['artists'][0]['name'], 'url': song['external_urls']['spotify']} for song in songs]
-        return render(request, 'suggestions.html', {'songs': song_list})
-    else:
-        return JsonResponse({'error': 'Failed to fetch songs'}, status=response.status_code)
+    # Store the access token in the session if needed
+    request.session['access_token'] = access_token
+    return redirect('index')  # Redirect to the index page after login

@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -99,6 +100,7 @@
       <div id="BotInput">
         <p><span>Hii there. </span></p>
         <p>{{data}}</p>
+        <h1>{{data.emotion}}</h1>
       </div>
     </div>
     <!--Input Field -->
@@ -112,10 +114,10 @@
         <button type="submit" id="Submit_btn">
           <i class="bi bi-send"></i>
         </button>
-        <button><a href="/login">Get Song</a></button>
+        <button id="redirectToSpotify">Click</button>
+        <div id="data-container"></div>
       </div>
     </div>
-
     <script>
       function getUserResponse() {
         var userText = $('#textInput').val();
@@ -130,7 +132,9 @@
         $.get('/chat', { user_message: userText }).done(function (data) {
           //send the bot reply to user
           var botReply =
-            "<p class='botText'><b>ChatBot:</b> <span>" + data + '</span></p>';
+            "<p class='botText'><b>ChatBot:</b> <span>" +
+            data.response +
+            '</span></p>';
           $('#BotInput').append(botReply);
         });
       }
@@ -145,20 +149,36 @@
           getUserResponse();
         }
       });
-      // Create the list element
-      var list = $("<ol>").appendTo("#BotInput");
-
-      // Loop through the songs array and create list items
-      $.each(songs, function(index, song) {
-          var listItem = $("<li>").appendTo(list);
-          var link = $("<a>")
-              .attr("href", song.url)
-              .attr("target", "_blank")
-              .text(song.name + " by " + song.artist)
-              .appendTo(listItem);
+      $(document).ready(function(){
+        $('#redirectToSpotify').on('click', function(){
+            var userMessage = $('#user-message').val();  // Get the message from an input field
+    
+            $.ajax({
+                url: '/analyze_emotion/',  // Adjust the URL according to your setup
+                method: 'GET',
+                data: {
+                    user_message: userMessage
+                },
+                success: function(response) {
+                    $('#result').text('Detected Emotion: ' + response.emotion);  // Display the emotion
+                },
+                error: function(xhr, status, error) {
+                    $('#result').text('Error: ' + xhr.responseJSON.error);  // Display the error message
+                }
+            });
+        });
       });
-
-      
+      function redirectToSpotify() {
+        const emotion = document.getElementById('emotion').value;
+        if (emotion) {
+          const spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(
+            emotion
+          )}%20songs`;
+          window.open(spotifyUrl, '_blank'); // Open in a new tab
+        } else {
+          alert('Please enter an emotion!');
+        }
+      }
     </script>
   </body>
 </html>
