@@ -1,7 +1,7 @@
 {"intents": [
   {"tag": "greeting",
    "patterns": ["hi","hii", "hello", "whats up", "sup", "is anyone there", "whats good", "hey"],
-   "responses": ["hello peasant human", "hello lowly human", "how dare you address me like that"]
+   "responses": ["hello pleasant human", "hello lowly human", "how dare you address me like that"]
   },
   {"tag": "goodbye",
    "patterns": ["bye", "cya", "see you later", "goodbye", "im leaving", "have a good day","see you again"],

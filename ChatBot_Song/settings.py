@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'chatbot_app',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +77,12 @@ WSGI_APPLICATION = 'ChatBot_Song.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # Use MySQL as the database engine
+        'NAME': 'chatbot_song_recommmed',          # The name of your MySQL database
+        'USER': 'root',         # Your MySQL username
+        'PASSWORD': 'root',     # Your MySQL password
+        'HOST': 'localhost',                   # The hostname of the database server (usually 'localhost')
+        'PORT': '3306', 
     }
 }
 

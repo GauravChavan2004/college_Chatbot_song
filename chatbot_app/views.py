@@ -1,4 +1,3 @@
-
 import nltk
 nltk.download('punkt_tab')
 nltk.download('wordnet')
@@ -12,14 +11,13 @@ from .intents import intents
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import random
-import text2emotion
+import text2emotion as te
 import requests
-import json
+from collections import Counter
 from django.http import JsonResponse
 from spotipy.oauth2 import SpotifyOAuth
 
 lemmatizer = WordNetLemmatizer()
-
 
 def home(request):
     return render(request,"index.html",{})
@@ -43,22 +41,6 @@ emotion_labels = {
     'Surprise': 'surprised'
 }
 
-def analyze_emotion(request):
-    msg = request.GET.get('user_message')
-
-    if not msg:  # Check if msg is None or empty
-        return JsonResponse({'error': 'No message provided'}, status=400)
-
-    emotions = text2emotion.get_emotion(msg)
-    if not emotions:  # Check if emotions is empty
-        return JsonResponse({'error': 'Emotion analysis failed'}, status=400)
-
-    max_emotion = max(emotions, key=emotions.get)
-    emotion_label = emotion_labels[max_emotion]
-
-    Emotion.objects.create(emotion=emotion_label)
-    return JsonResponse({'emotion': emotion_label}, status=200)
-
 
 def chat(request):
     msg = request.GET.get('user_message')
@@ -66,6 +48,24 @@ def chat(request):
     response = chatbot_response(msg1)
     Conversation.objects.create(user_input=msg, response=response) 
     return JsonResponse({'response':response})
+
+def analyze_emotion(request):
+    latest_five_conversations = Conversation.objects.order_by('-id')[:5]
+    total_emotions = Counter()
+    for conversation in latest_five_conversations:
+        msg = conversation.user_input
+        emotions = te.get_emotion(msg)
+        if emotions:
+            total_emotions.update(emotions)
+        else:
+            continue
+
+    if not total_emotions:  # Check if there are any emotions aggregated
+        return JsonResponse({'error': 'No valid emotions found from the last 5 messages'}, status=400)
+    max_emotion = total_emotions.most_common(1)[0][0]
+    emotion_label = emotion_labels.get(max_emotion, 'unknown')
+    Emotion.objects.create(emotion=emotion_label)
+    return JsonResponse({'emotion': emotion_label}, status=200)
 
 
 CLIENT_ID = '5f23245341574c4f8197d92d339cb2e7'
