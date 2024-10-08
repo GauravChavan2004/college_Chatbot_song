@@ -20,7 +20,11 @@ from spotipy.oauth2 import SpotifyOAuth
 lemmatizer = WordNetLemmatizer()
 
 def home(request):
-    return render(request,"index.html",{})  
+    # Check if the user is authenticated
+    context = {
+        'is_logged_in': request.user.is_authenticated
+    }
+    return render(request,"index.html", context)  
 
 def chatbot_response(msg):
     words = word_tokenize(msg)
@@ -70,7 +74,7 @@ def analyze_emotion(request):
 
 CLIENT_ID = '5f23245341574c4f8197d92d339cb2e7'
 CLIENT_SECRET = 'ca3bf1d79a8f48b9be4a50574c18adb8'
-REDIRECT_URI = 'http://localhost:8000/callback'
+REDIRECT_URI = 'http://localhost:8000/callback' 
 
 def login(request):
     scope = 'user-read-private user-read-email'
